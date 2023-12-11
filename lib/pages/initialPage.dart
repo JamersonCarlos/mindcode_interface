@@ -19,13 +19,17 @@ class _initialPageState extends State<initialPage> {
             height: double.infinity,
             width: double.infinity,
           ),
+          Image.asset(
+            'assets/img/logo.png',
+            alignment: Alignment.topLeft,
+          ),
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding:  EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(bottom: 10),
                   child: Text(
                     '  Digite o caminho do diretório do projeto: ',
                     style: TextStyle(
@@ -43,25 +47,20 @@ class _initialPageState extends State<initialPage> {
                     ),
                     autofocus: true,
                     decoration: InputDecoration(
-                      hintText: 'C:/users/jcenv',
-                      hintStyle: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      prefixText: 'Path: ',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white
+                        hintText: 'C:/users/jcenv',
+                        hintStyle: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors.white
+                        prefixText: 'Path: ',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      )
-                    ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        )),
                   ),
                 ),
               ],
