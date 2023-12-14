@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' as io;
-
 import 'package:mindcode_interface/pages/main_page.dart';
+import 'package:mindcode_interface/services/check_directory_service.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
@@ -14,6 +13,7 @@ class InitialPage extends StatefulWidget {
 class _initialPageState extends State<InitialPage> {
   final TextEditingController submitPath = TextEditingController();
   bool existsDirectory = true;
+  ExistsDirectoryService service = ExistsDirectoryService();
 
   @override
   Widget build(BuildContext context) {
@@ -56,33 +56,43 @@ class _initialPageState extends State<InitialPage> {
                     ),
                     autofocus: true,
                     decoration: InputDecoration(
-                        suffixIcon: GestureDetector(
-                          onTap: (() {
-                            checkExistDirectory();
-                          }),
-                          child: const Icon(
-                            Icons.keyboard_arrow_right,
-                            size: 40,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        errorText:
-                            existsDirectory ? null : 'Diretório não existe',
-                        errorStyle: const TextStyle(color: Colors.redAccent),
-                        hintText: 'C:/users/jcenv',
-                        hintStyle: const TextStyle(
+                      suffixIcon: GestureDetector(
+                        onTap: (() {
+                          checkExistDirectory();
+                        }),
+                        child: const Icon(
+                          Icons.keyboard_arrow_right,
+                          size: 40,
                           color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
                         ),
-                        prefixText: 'Path: ',
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        )),
+                      ),
+                      errorText:
+                          existsDirectory ? null : 'Diretório não encontrado !',
+                      errorStyle: const TextStyle(
+                          color: Colors.redAccent, fontSize: 18),
+                      hintText: 'C:/users/jcenv',
+                      hintStyle: const TextStyle(
+                        color: Colors.blueAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      prefixText: 'Path: ',
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      errorBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      focusedErrorBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -94,14 +104,18 @@ class _initialPageState extends State<InitialPage> {
   }
 
   void checkExistDirectory() {
-    if (io.Directory(submitPath.text.toString()).existsSync()) {
-      existsDirectory = true;
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MainPage()));
-    } else {
-      setState(() {
-        existsDirectory = false;
-      });
-    }
+    service.checkDirectory(submitPath.text).then((value) {
+      if (value['check']) {
+        setState(() {
+          existsDirectory = true;
+        });
+        Navigator.push(context,
+            MaterialPageRoute(builder: ((context) => const MainPage())));
+      } else {
+        setState(() {
+          existsDirectory = false;
+        });
+      }
+    });
   }
 }
