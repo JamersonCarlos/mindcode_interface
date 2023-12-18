@@ -1,3 +1,5 @@
+import 'dart:io' as io;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mindcode_interface/pages/main_page.dart';
@@ -103,17 +105,23 @@ class _initialPageState extends State<InitialPage> {
     );
   }
 
-  void checkExistDirectory() {
-    service.checkDirectory(submitPath.text).then((value) {
-      if (value) {
-        existsDirectory = true;
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainPage(),
+  void checkExistDirectory() async {
+    bool response = await service.checkDirectory(submitPath.text);
+    List<io.FileSystemEntity> list = service.listDirectory(submitPath.text);
+    if (response) {
+      existsDirectory = true;
+      // ignore: use_build_context_synchronously
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainPage(
+              path: submitPath.text,
+              listDirectory: list,
             ),
-            (route) => false);
-      }
-    });
+          ),
+          (route) => false);
+    } else {
+      existsDirectory = false;
+    }
   }
 }
