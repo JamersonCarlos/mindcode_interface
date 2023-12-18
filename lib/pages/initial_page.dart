@@ -112,14 +112,15 @@ class _initialPageState extends State<InitialPage> {
       existsDirectory = true;
       // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainPage(
-              path: submitPath.text,
-              listDirectory: list,
-            ),
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(
+            path: submitPath.text,
+            listDirectory: list,
           ),
-          (route) => false);
+        ),
+        (route) => false,
+      );
     } else {
       existsDirectory = false;
     }
