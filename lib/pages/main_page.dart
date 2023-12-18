@@ -10,6 +10,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  TextEditingController boxDialog = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,7 @@ class _MainPageState extends State<MainPage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.2,
             decoration: const BoxDecoration(
               border: Border(
                 right: BorderSide(
@@ -147,6 +149,63 @@ class _MainPageState extends State<MainPage> {
                     ],
                   ),
                 ),
+                Expanded(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.4,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        width: 1,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    child: TextField(
+                      controller: boxDialog,
+                      decoration: const InputDecoration(
+                        hintText: 'Message MindCode',
+                        suffixIcon: Icon(
+                          Icons.next_week,
+                          size: 30,
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        errorBorder: null,
+                        focusedErrorBorder: null,
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
