@@ -105,16 +105,14 @@ class _initialPageState extends State<InitialPage> {
 
   void checkExistDirectory() {
     service.checkDirectory(submitPath.text).then((value) {
-      if (value['check']) {
-        setState(() {
-          existsDirectory = true;
-        });
-        Navigator.push(context,
-            MaterialPageRoute(builder: ((context) => const MainPage())));
-      } else {
-        setState(() {
-          existsDirectory = false;
-        });
+      if (value) {
+        existsDirectory = true;
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MainPage(),
+            ),
+            (route) => false);
       }
     });
   }
