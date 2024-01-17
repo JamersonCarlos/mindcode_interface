@@ -117,6 +117,10 @@ class _initialPageState extends State<InitialPage> {
           builder: (context) => MainPage(
             path: submitPath.text,
             listDirectory: list,
+            listFilter: list.where((element) {
+              return element.path.replaceAll('\\', '/').split('/').last[0] !=
+                  '.';
+            }).toList(),
           ),
         ),
         (route) => false,
