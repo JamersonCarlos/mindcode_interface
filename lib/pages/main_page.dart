@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
 
@@ -7,15 +5,33 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key, required this.path, required this.listDirectory});
+  const MainPage({
+    super.key,
+    required this.path,
+    required this.listDirectory,
+    required this.listFilter,
+  });
   final String path;
   final List<io.FileSystemEntity> listDirectory;
+  final List<io.FileSystemEntity> listFilter;
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
+  bool switchButton = false;
+  bool isHoverContainer = false;
+
+  final MaterialStateProperty<Icon?> thumbIcon =
+      MaterialStateProperty.resolveWith<Icon?>(
+    (Set<MaterialState> states) {
+      if (states.contains(MaterialState.selected)) {
+        return const Icon(Icons.check);
+      }
+      return const Icon(Icons.close);
+    },
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -114,29 +130,86 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Arquivos Ocultos   ',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFFD1C6FF),
+                        ),
+                      ),
+                      Transform.scale(
+                        scale: 0.7,
+                        child: Switch(
+                          thumbIcon: thumbIcon,
+                          value: switchButton,
+                          onChanged: (bool value) {
+                            setState(() {
+                              switchButton = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(8),
-                    itemCount: widget.listDirectory.length,
+                    itemCount: switchButton
+                        ? widget.listDirectory.length
+                        : widget.listFilter.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 7),
-                        child: Container(
-                          width: 120,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                            width: 1,
-                            color: Colors.black,
-                          )),
-                          child: Center(
-                            child: Text(
-                              widget.listDirectory[index].path
-                                  .replaceAll('\\', '/')
-                                  .split('/')
-                                  .last,
-                              style: GoogleFonts.poppins(
-                                color: const Color(
-                                  0xFFD1C6FF,
+                        child: MouseRegion(
+                          onEnter: (event) {
+                            setState(() {
+                              isHoverContainer = true;
+                            });
+                          },
+                          onExit: (event) {
+                            setState(() {
+                              isHoverContainer = false;
+                            });
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                  right: BorderSide(color: Color(0xFFB8A12B))),
+                              gradient: LinearGradient(
+                                begin: Alignment.centerRight,
+                                end: Alignment.centerLeft,
+                                colors: [Color(0xff452ce1), Color(0x59ffffff)],
+                              ),
+                            ),
+                            child: SizedBox(
+                              height: 22,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  padding: const EdgeInsets.all(0),
+                                ),
+                                child: Text(
+                                  switchButton
+                                      ? widget.listDirectory[index].path
+                                          .replaceAll('\\', '/')
+                                          .split('/')
+                                          .last
+                                      : widget.listFilter[index].path
+                                          .replaceAll('\\', '/')
+                                          .split('/')
+                                          .last,
+                                  style: GoogleFonts.poppins(
+                                    color: const Color(
+                                      0xFFD1C6FF,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
