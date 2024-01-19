@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
+import 'package:mindcode_interface/widgets/navigation_tools.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -36,11 +37,12 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF121024),
       body: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
-            width: MediaQuery.of(context).size.width * 0.15,
+            width: 220,
             decoration: const BoxDecoration(
               color: Color(0xFF0A0A16),
               border: Border(
@@ -52,7 +54,7 @@ class _MainPageState extends State<MainPage> {
               boxShadow: <BoxShadow>[
                 BoxShadow(
                   blurRadius: 60,
-                  color: Color(0xFFE2ECF9),
+                  color: Color.fromARGB(157, 226, 236, 249),
                   offset: Offset(0, 0.60),
                 )
               ],
@@ -222,163 +224,98 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
           ),
-          Expanded(
-            child: Column(
-              children: [
-                Container(
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 1,
-                        color: Colors.black,
+          Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            margin: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width * 0.025,
+                right: MediaQuery.of(context).size.width * 0.02),
+            child: Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 1,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffd9d9d9),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text('Problemas de código'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffd9d9d9),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text('Overview'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffd9d9d9),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text('Funcionalidades'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffd9d9d9),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text('Arquitetura'),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffd9d9d9),
-                            border: Border.all(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text('Requisitos Técnicos'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            right: BorderSide(
-                              width: 1,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.4,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        width: 1,
-                        color: Colors.black,
-                      ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Navigation(identification: 'Problemas de código'),
+                        Navigation(identification: 'Overview'),
+                        Navigation(identification: 'Funcionalidades'),
+                        Navigation(identification: 'Arquitetura'),
+                        Navigation(identification: 'Requisitos Técnicos'),
+                      ],
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8, right: 8),
-                    child: TextField(
-                      controller: boxDialog,
-                      decoration: const InputDecoration(
-                        hintText: 'Message MindCode',
-                        suffixIcon: Icon(
-                          Icons.next_week,
-                          size: 30,
+                  Expanded(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF0C0825),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                        ),
-                        errorBorder: null,
-                        focusedErrorBorder: null,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            blurRadius: 30,
+                            color: Color.fromARGB(157, 226, 236, 249),
+                            offset: Offset(0, 0.50),
+                          )
+                        ],
+                      ),
+                      margin: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(child: Container()),
+                          Container(
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                top: BorderSide(
+                                  width: 1,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: TextField(
+                                controller: boxDialog,
+                                decoration: const InputDecoration(
+                                  hintText: 'Message MindCode',
+                                  suffixIcon: Icon(
+                                    Icons.next_week,
+                                    size: 30,
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+                                  errorBorder: null,
+                                  focusedErrorBorder: null,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ],
