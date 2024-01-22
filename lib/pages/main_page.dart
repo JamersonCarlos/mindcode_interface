@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
   bool switchButton = false;
   bool isHoverContainer = false;
+  bool barNavigation = true;
 
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
@@ -232,27 +233,79 @@ class _MainPageState extends State<MainPage> {
             child: Expanded(
               child: Column(
                 children: [
-                  Container(
-                    height: 50,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 1,
-                          color: Colors.black,
+                  AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInExpo,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            width: 4,
+                            color: Color(0xFFF6F6FB),
+                          ),
                         ),
                       ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Navigation(identification: 'Problemas de código'),
-                        Navigation(identification: 'Overview'),
-                        Navigation(identification: 'Funcionalidades'),
-                        Navigation(identification: 'Arquitetura'),
-                        Navigation(identification: 'Requisitos Técnicos'),
-                      ],
-                    ),
-                  ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'DashBoard ',
+                                  style: GoogleFonts.poppins(
+                                    color: const Color(0xFFCCC3FF),
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      barNavigation = !barNavigation;
+                                    });
+                                  },
+                                  icon: !barNavigation
+                                      ? const Icon(
+                                          Icons
+                                              .keyboard_double_arrow_right_sharp,
+                                          color: Color(
+                                            0xFFCCC3FF,
+                                          ),
+                                          size: 40,
+                                        )
+                                      : const Icon(
+                                          Icons
+                                              .keyboard_double_arrow_down_sharp,
+                                          color: Color(0xFFCCC3FF),
+                                          size: 40,
+                                        ),
+                                ),
+                              ],
+                            ),
+                            barNavigation
+                                ? const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Navigation(
+                                          identification:
+                                              'Problemas de código'),
+                                      Navigation(identification: 'Overview'),
+                                      Navigation(
+                                          identification: 'Funcionalidades'),
+                                      Navigation(identification: 'Arquitetura'),
+                                      Navigation(
+                                          identification:
+                                              'Requisitos Técnicos'),
+                                    ],
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      )),
                   Expanded(
                     child: Container(
                       decoration: const BoxDecoration(
