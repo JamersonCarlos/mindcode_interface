@@ -24,7 +24,14 @@ class _MainPageState extends State<MainPage> {
   bool switchButton = false;
   bool isHoverContainer = false;
   bool barNavigation = true;
-
+  List<String> options = [
+    'Overview',
+    'Arquitetura',
+    'Problemas de código',
+    'Funcionalidades',
+    'Requisitos técnicos'
+  ];
+  String dropdownValue = 'Overview';
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
     (Set<MaterialState> states) {
@@ -248,61 +255,50 @@ class _MainPageState extends State<MainPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(
                           left: 20,
+                          top: 10,
+                          bottom: 10,
                         ),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'DashBoard ',
-                                  style: GoogleFonts.poppins(
-                                    color: const Color(0xFFCCC3FF),
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w600,
+                            Text(
+                              'DashBoard ',
+                              style: GoogleFonts.poppins(
+                                color: const Color(0xFFCCC3FF),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            DropdownMenu<String>(
+                              initialSelection: options.first,
+                              textStyle: GoogleFonts.poppins(
+                                color: const Color(0xFFCCC3FF),
+                              ),
+                              onSelected: (String? value) {
+                                // This is called when the user selects an item.
+                                setState(() {
+                                  dropdownValue = value!;
+                                });
+                              },
+                              inputDecorationTheme: const InputDecorationTheme(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFCCC3FF),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      barNavigation = !barNavigation;
-                                    });
-                                  },
-                                  icon: !barNavigation
-                                      ? const Icon(
-                                          Icons
-                                              .keyboard_double_arrow_right_sharp,
-                                          color: Color(
-                                            0xFFCCC3FF,
-                                          ),
-                                          size: 40,
-                                        )
-                                      : const Icon(
-                                          Icons
-                                              .keyboard_double_arrow_down_sharp,
-                                          color: Color(0xFFCCC3FF),
-                                          size: 40,
-                                        ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white30,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            barNavigation
-                                ? const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Navigation(
-                                          identification:
-                                              'Problemas de código'),
-                                      Navigation(identification: 'Overview'),
-                                      Navigation(
-                                          identification: 'Funcionalidades'),
-                                      Navigation(identification: 'Arquitetura'),
-                                      Navigation(
-                                          identification:
-                                              'Requisitos Técnicos'),
-                                    ],
-                                  )
-                                : Container(),
+                              ),
+                              dropdownMenuEntries: options
+                                  .map<DropdownMenuEntry<String>>(
+                                      (String value) {
+                                return DropdownMenuEntry<String>(
+                                    value: value, label: value);
+                              }).toList(),
+                            )
                           ],
                         ),
                       )),
@@ -311,7 +307,7 @@ class _MainPageState extends State<MainPage> {
                       decoration: const BoxDecoration(
                         color: Color(0xFF0C0825),
                         borderRadius: BorderRadius.all(
-                          Radius.circular(30),
+                          Radius.circular(20),
                         ),
                         boxShadow: <BoxShadow>[
                           BoxShadow(
@@ -333,7 +329,7 @@ class _MainPageState extends State<MainPage> {
                               border: Border(
                                 top: BorderSide(
                                   width: 1,
-                                  color: Colors.black,
+                                  color: Color(0xFFC3B4FF),
                                 ),
                               ),
                             ),
@@ -341,18 +337,21 @@ class _MainPageState extends State<MainPage> {
                               padding: const EdgeInsets.only(left: 8, right: 8),
                               child: TextField(
                                 controller: boxDialog,
-                                decoration: const InputDecoration(
-                                  hintText: 'Message MindCode',
-                                  suffixIcon: Icon(
+                                decoration: InputDecoration(
+                                  hintText: '   Message MindCode',
+                                  hintStyle: GoogleFonts.poppins(
+                                    color: const Color(0xFFCCC3FF),
+                                  ),
+                                  suffixIcon: const Icon(
                                     Icons.next_week,
                                     size: 30,
                                   ),
-                                  focusedBorder: UnderlineInputBorder(
+                                  focusedBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.transparent,
                                     ),
                                   ),
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.transparent,
                                     ),
