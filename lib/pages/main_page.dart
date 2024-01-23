@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
+import 'package:mindcode_interface/services/read_file.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -20,6 +21,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
+  ReadFile serviceReadFile = ReadFile();
+  List<List<String>> conteudos = [];
   bool switchButton = false;
   bool isHoverContainer = false;
   bool barNavigation = true;
@@ -167,6 +170,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                    shrinkWrap: true,
                     padding: const EdgeInsets.all(8),
                     itemCount: switchButton
                         ? widget.listDirectory.length
@@ -198,7 +202,25 @@ class _MainPageState extends State<MainPage> {
                             child: SizedBox(
                               height: 22,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  switchButton
+                                      ? serviceReadFile
+                                          .readFiles(
+                                              widget.listDirectory[index].path)
+                                          .then((value) {
+                                          setState(() {
+                                            conteudos = value;
+                                          });
+                                        })
+                                      : serviceReadFile
+                                          .readFiles(
+                                              widget.listFilter[index].path)
+                                          .then((value) {
+                                          setState(() {
+                                            conteudos = value;
+                                          });
+                                        });
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
                                   shadowColor: Colors.transparent,
@@ -236,137 +258,198 @@ class _MainPageState extends State<MainPage> {
             margin: EdgeInsets.only(
                 left: MediaQuery.of(context).size.width * 0.025,
                 right: MediaQuery.of(context).size.width * 0.02),
-            child: Expanded(
-              child: Column(
-                children: [
-                  AnimatedContainer(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeInExpo,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            width: 4,
-                            color: Color(0xFFF6F6FB),
-                          ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInExpo,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 4,
+                          color: Color(0xFFF6F6FB),
                         ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          top: 10,
-                          bottom: 10,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'DashBoard ',
-                              style: GoogleFonts.poppins(
-                                color: const Color(0xFFCCC3FF),
-                                fontSize: 32,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            DropdownMenu<String>(
-                              initialSelection: options.first,
-                              textStyle: GoogleFonts.poppins(
-                                color: const Color(0xFFCCC3FF),
-                              ),
-                              onSelected: (String? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  dropdownValue = value!;
-                                });
-                              },
-                              inputDecorationTheme: const InputDecorationTheme(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Color(0xFFCCC3FF),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.white30,
-                                  ),
-                                ),
-                              ),
-                              dropdownMenuEntries: options
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList(),
-                            )
-                          ],
-                        ),
-                      )),
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF0C0825),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(20),
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            blurRadius: 30,
-                            color: Color.fromARGB(157, 226, 236, 249),
-                            offset: Offset(0, 0.50),
-                          )
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Expanded(child: Container()),
-                          Container(
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFFC3B4FF),
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 8),
-                              child: TextField(
-                                controller: boxDialog,
-                                decoration: InputDecoration(
-                                  hintText: '   Message MindCode',
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: const Color(0xFFCCC3FF),
-                                  ),
-                                  suffixIcon: const Icon(
-                                    Icons.next_week,
-                                    size: 30,
-                                  ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                    ),
-                                  ),
-                                  enabledBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                    ),
-                                  ),
-                                  errorBorder: null,
-                                  focusedErrorBorder: null,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
                       ),
                     ),
-                  )
-                ],
-              ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'DashBoard ',
+                            style: GoogleFonts.poppins(
+                              color: const Color(0xFFCCC3FF),
+                              fontSize: 32,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          DropdownMenu<String>(
+                            initialSelection: options.first,
+                            textStyle: GoogleFonts.poppins(
+                              color: const Color(0xFFCCC3FF),
+                            ),
+                            onSelected: (String? value) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                dropdownValue = value!;
+                              });
+                            },
+                            inputDecorationTheme: const InputDecorationTheme(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xFFCCC3FF),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.white30,
+                                ),
+                              ),
+                            ),
+                            dropdownMenuEntries: options
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                  value: value, label: value);
+                            }).toList(),
+                          )
+                        ],
+                      ),
+                    )),
+                Expanded(
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF0C0825),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          blurRadius: 30,
+                          color: Color.fromARGB(157, 226, 236, 249),
+                          offset: Offset(0, 0.50),
+                        )
+                      ],
+                    ),
+                    margin: const EdgeInsets.only(top: 20, bottom: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 35,
+                                child: ListView.builder(
+                                  itemCount: conteudos.length,
+                                  scrollDirection:
+                                      axisDirectionToAxis(AxisDirection.right),
+                                  itemBuilder: ((context, index) {
+                                    return Row(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: (index == 0)
+                                                ? const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                  )
+                                                : const BorderRadius.all(
+                                                    Radius.zero),
+                                            gradient: const LinearGradient(
+                                              begin: Alignment.centerRight,
+                                              end: Alignment.centerLeft,
+                                              colors: [
+                                                Color(0xff452ce1),
+                                                Color(0x59ffffff)
+                                              ],
+                                            ),
+                                          ),
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              shadowColor: Colors.transparent,
+                                              padding: const EdgeInsets.all(0),
+                                            ),
+                                            onPressed: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Text(
+                                                conteudos[index][0]
+                                                    .toString()
+                                                    .replaceAll('\\', '/')
+                                                    .split('/')
+                                                    .last,
+                                                style: GoogleFonts.poppins(
+                                                  color:
+                                                      const Color(0xFFCCC3FF),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                width: 1,
+                                color: Color(0xFFC3B4FF),
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: TextField(
+                              controller: boxDialog,
+                              decoration: InputDecoration(
+                                hintText: '   Message MindCode',
+                                hintStyle: GoogleFonts.poppins(
+                                  color: const Color(0xFFCCC3FF),
+                                ),
+                                suffixIcon: const Icon(
+                                  Icons.next_week,
+                                  size: 30,
+                                ),
+                                focusedBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                enabledBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                errorBorder: null,
+                                focusedErrorBorder: null,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ],
