@@ -3,7 +3,6 @@ import 'dart:io' as io;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
-import 'package:mindcode_interface/widgets/navigation_tools.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
