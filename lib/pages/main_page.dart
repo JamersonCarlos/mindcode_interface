@@ -211,7 +211,11 @@ class _MainPageState extends State<MainPage> {
                                           .then((value) {
                                           setState(() {
                                             conteudos = value;
-                                            selectConteudo = value[0];
+                                            if (conteudos.isNotEmpty) {
+                                              selectConteudo = value.first;
+                                            } else {
+                                              selectConteudo = [];
+                                            }
                                           });
                                         })
                                       : serviceReadFile
@@ -220,7 +224,11 @@ class _MainPageState extends State<MainPage> {
                                           .then((value) {
                                           setState(() {
                                             conteudos = value;
-                                            selectConteudo = value[0];
+                                            if (conteudos.isNotEmpty) {
+                                              selectConteudo = value.first;
+                                            } else {
+                                              selectConteudo = [];
+                                            }
                                           });
                                         });
                                 },
@@ -351,7 +359,7 @@ class _MainPageState extends State<MainPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               SizedBox(
-                                height: 35,
+                                height: 25,
                                 child: ListView.builder(
                                   itemCount: conteudos.length,
                                   scrollDirection:
@@ -384,7 +392,12 @@ class _MainPageState extends State<MainPage> {
                                               shadowColor: Colors.transparent,
                                               padding: const EdgeInsets.all(0),
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              setState(() {
+                                                selectConteudo =
+                                                    conteudos[index];
+                                              });
+                                            },
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
@@ -409,12 +422,25 @@ class _MainPageState extends State<MainPage> {
                                                   ),
                                                 ),
                                                 Transform.translate(
-                                                  offset: const Offset(0, -2),
+                                                  offset: const Offset(0, -6),
                                                   child: IconButton(
-                                                    onPressed: () {},
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        conteudos
+                                                            .removeAt(index);
+                                                        if (conteudos
+                                                            .isNotEmpty) {
+                                                          selectConteudo =
+                                                              conteudos.first;
+                                                        } else {
+                                                          selectConteudo = [];
+                                                        }
+                                                      });
+                                                    },
                                                     icon: const Icon(
                                                       Icons.cancel_rounded,
                                                       color: Color(0xFFCCC3FF),
+                                                      size: 20,
                                                     ),
                                                   ),
                                                 ),
@@ -428,16 +454,21 @@ class _MainPageState extends State<MainPage> {
                                 ),
                               ),
                               selectConteudo.isNotEmpty
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 15, left: 10),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          selectConteudo[1],
-                                          textAlign: TextAlign.justify,
-                                          style: GoogleFonts.poppins(
-                                            color: const Color(0xFFCCC3FF),
+                                  ? Expanded(
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 15, left: 10),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              selectConteudo[1],
+                                              textAlign: TextAlign.justify,
+                                              style: GoogleFonts.poppins(
+                                                color: const Color(0xFFCCC3FF),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
