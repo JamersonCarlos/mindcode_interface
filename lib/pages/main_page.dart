@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
   ReadFile serviceReadFile = ReadFile();
   List<List<String>> conteudos = [];
+  List<String> selectConteudo = [];
   bool switchButton = false;
   bool isHoverContainer = false;
   bool barNavigation = true;
@@ -210,6 +211,7 @@ class _MainPageState extends State<MainPage> {
                                           .then((value) {
                                           setState(() {
                                             conteudos = value;
+                                            selectConteudo = value[0];
                                           });
                                         })
                                       : serviceReadFile
@@ -218,6 +220,7 @@ class _MainPageState extends State<MainPage> {
                                           .then((value) {
                                           setState(() {
                                             conteudos = value;
+                                            selectConteudo = value[0];
                                           });
                                         });
                                 },
@@ -382,19 +385,40 @@ class _MainPageState extends State<MainPage> {
                                               padding: const EdgeInsets.all(0),
                                             ),
                                             onPressed: () {},
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: Text(
-                                                conteudos[index][0]
-                                                    .toString()
-                                                    .replaceAll('\\', '/')
-                                                    .split('/')
-                                                    .last,
-                                                style: GoogleFonts.poppins(
-                                                  color:
-                                                      const Color(0xFFCCC3FF),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8),
+                                                  child: Text(
+                                                    conteudos[index][0]
+                                                        .toString()
+                                                        .replaceAll('\\', '/')
+                                                        .split('/')
+                                                        .last,
+                                                    style: GoogleFonts.poppins(
+                                                      color: const Color(
+                                                          0xFFCCC3FF),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                Transform.translate(
+                                                  offset: const Offset(0, -2),
+                                                  child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const Icon(
+                                                      Icons.cancel_rounded,
+                                                      color: Color(0xFFCCC3FF),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -402,7 +426,23 @@ class _MainPageState extends State<MainPage> {
                                     );
                                   }),
                                 ),
-                              )
+                              ),
+                              selectConteudo.isNotEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 15, left: 10),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          selectConteudo[1],
+                                          textAlign: TextAlign.justify,
+                                          style: GoogleFonts.poppins(
+                                            color: const Color(0xFFCCC3FF),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
                             ],
                           ),
                         ),
