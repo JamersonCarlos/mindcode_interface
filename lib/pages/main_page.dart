@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
+import 'package:mindcode_interface/services/check_Directory_Service.dart';
 import 'package:mindcode_interface/services/read_file.dart';
 
 class MainPage extends StatefulWidget {
@@ -22,8 +23,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
   ReadFile serviceReadFile = ReadFile();
+  ExistsDirectoryService ReadSonFiles = ExistsDirectoryService();
   List<List<String>> conteudos = [];
   List<String> selectConteudo = [];
+  List<List<dynamic>> organizedFilesSon = [];
   bool switchButton = false;
   bool isHoverContainer = false;
   bool barNavigation = true;
@@ -34,6 +37,7 @@ class _MainPageState extends State<MainPage> {
     'Funcionalidades',
     'Requisitos técnicos'
   ];
+
   String dropdownValue = 'Overview';
   final MaterialStateProperty<Icon?> thumbIcon =
       MaterialStateProperty.resolveWith<Icon?>(
@@ -44,6 +48,25 @@ class _MainPageState extends State<MainPage> {
       return const Icon(Icons.close);
     },
   );
+
+  void createListDropFiles(int length) {
+    organizedFilesSon.clear();
+    for (int i = 0; i < length; i++) {
+      organizedFilesSon.add([]);
+    }
+  }
+
+  void addSonDirectory(index, list) {
+    if (!organizedFilesSon[index].contains(list)) {
+      organizedFilesSon[index].add(list);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    createListDropFiles(widget.listDirectory.length);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,86 +200,92 @@ class _MainPageState extends State<MainPage> {
                         ? widget.listDirectory.length
                         : widget.listFilter.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 7),
-                        child: MouseRegion(
-                          onEnter: (event) {
-                            setState(() {
-                              isHoverContainer = true;
-                            });
-                          },
-                          onExit: (event) {
-                            setState(() {
-                              isHoverContainer = false;
-                            });
-                          },
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                  right: BorderSide(color: Color(0xFFB8A12B))),
-                              gradient: LinearGradient(
-                                begin: Alignment.centerRight,
-                                end: Alignment.centerLeft,
-                                colors: [Color(0xff452ce1), Color(0x59ffffff)],
-                              ),
-                            ),
-                            child: SizedBox(
-                              height: 22,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  switchButton
-                                      ? serviceReadFile
-                                          .readFiles(
-                                              widget.listDirectory[index].path)
-                                          .then((value) {
-                                          setState(() {
-                                            conteudos = value;
-                                            if (conteudos.isNotEmpty) {
-                                              selectConteudo = value.first;
-                                            } else {
-                                              selectConteudo = [];
-                                            }
-                                          });
-                                        })
-                                      : serviceReadFile
-                                          .readFiles(
-                                              widget.listFilter[index].path)
-                                          .then((value) {
-                                          setState(() {
-                                            conteudos = value;
-                                            if (conteudos.isNotEmpty) {
-                                              selectConteudo = value.first;
-                                            } else {
-                                              selectConteudo = [];
-                                            }
-                                          });
-                                        });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  padding: const EdgeInsets.all(0),
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                    right:
+                                        BorderSide(color: Color(0xFFB8A12B))),
+                                gradient: LinearGradient(
+                                  begin: Alignment.centerRight,
+                                  end: Alignment.centerLeft,
+                                  colors: [
+                                    Color(0xff452ce1),
+                                    Color(0x59ffffff)
+                                  ],
                                 ),
-                                child: Text(
-                                  switchButton
-                                      ? widget.listDirectory[index].path
-                                          .replaceAll('\\', '/')
-                                          .split('/')
-                                          .last
-                                      : widget.listFilter[index].path
-                                          .replaceAll('\\', '/')
-                                          .split('/')
-                                          .last,
-                                  style: GoogleFonts.poppins(
-                                    color: const Color(
-                                      0xFFD1C6FF,
+                              ),
+                              child: SizedBox(
+                                height: 22,
+                                width: 200,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    switchButton
+                                        ? serviceReadFile
+                                            .readFiles(widget
+                                                .listDirectory[index].path)
+                                            .then((value) {
+                                            setState(() {
+                                              conteudos = value;
+                                              if (conteudos.isNotEmpty) {
+                                                selectConteudo = value.first;
+                                              } else {
+                                                selectConteudo = [];
+                                              }
+                                            });
+                                          })
+                                        : serviceReadFile
+                                            .readFiles(
+                                                widget.listFilter[index].path)
+                                            .then((value) {
+                                            setState(() {
+                                              conteudos = value;
+                                              if (conteudos.isNotEmpty) {
+                                                selectConteudo = value.first;
+                                              } else {
+                                                selectConteudo = [];
+                                              }
+                                            });
+                                          });
+                                    switchButton
+                                        ? addSonDirectory(
+                                            index,
+                                            ReadSonFiles.listDirectory(widget
+                                                .listDirectory[index].path))
+                                        : addSonDirectory(
+                                            index,
+                                            ReadSonFiles.listDirectory(
+                                                widget.listFilter[index].path));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    padding: const EdgeInsets.all(0),
+                                  ),
+                                  child: Text(
+                                    switchButton
+                                        ? widget.listDirectory[index].path
+                                            .replaceAll('\\', '/')
+                                            .split('/')
+                                            .last
+                                        : widget.listFilter[index].path
+                                            .replaceAll('\\', '/')
+                                            .split('/')
+                                            .last,
+                                    style: GoogleFonts.poppins(
+                                      color: const Color(
+                                        0xFFD1C6FF,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       );
                     },
                   ),
