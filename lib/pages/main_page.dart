@@ -23,7 +23,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   TextEditingController boxDialog = TextEditingController();
   ReadFile serviceReadFile = ReadFile();
-  ExistsDirectoryService ReadSonFiles = ExistsDirectoryService();
+  ExistsDirectoryService readSonFiles = ExistsDirectoryService();
   List<List<String>> conteudos = [];
   List<String> selectConteudo = [];
   List<List<dynamic>> organizedFilesSon = [];
@@ -49,6 +49,19 @@ class _MainPageState extends State<MainPage> {
     },
   );
 
+  void filesView(index, list) {
+    serviceReadFile.readFiles(list[index].path).then((value) {
+      setState(() {
+        conteudos = value;
+        if (conteudos.isNotEmpty) {
+          selectConteudo = value.first;
+        } else {
+          selectConteudo = [];
+        }
+      });
+    });
+  }
+
   void createListDropFiles(int length) {
     organizedFilesSon.clear();
     for (int i = 0; i < length; i++) {
@@ -60,6 +73,18 @@ class _MainPageState extends State<MainPage> {
     if (!organizedFilesSon[index].contains(list)) {
       organizedFilesSon[index].add(list);
     }
+  }
+
+  bool getSwitchButton() {
+    return switchButton;
+  }
+
+  List<io.FileSystemEntity> getListDirectory() {
+    return widget.listDirectory;
+  }
+
+  List<io.FileSystemEntity> getListFilter() {
+    return widget.listFilter;
   }
 
   @override
@@ -224,40 +249,16 @@ class _MainPageState extends State<MainPage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     switchButton
-                                        ? serviceReadFile
-                                            .readFiles(widget
-                                                .listDirectory[index].path)
-                                            .then((value) {
-                                            setState(() {
-                                              conteudos = value;
-                                              if (conteudos.isNotEmpty) {
-                                                selectConteudo = value.first;
-                                              } else {
-                                                selectConteudo = [];
-                                              }
-                                            });
-                                          })
-                                        : serviceReadFile
-                                            .readFiles(
-                                                widget.listFilter[index].path)
-                                            .then((value) {
-                                            setState(() {
-                                              conteudos = value;
-                                              if (conteudos.isNotEmpty) {
-                                                selectConteudo = value.first;
-                                              } else {
-                                                selectConteudo = [];
-                                              }
-                                            });
-                                          });
+                                        ? filesView(index, widget.listDirectory)
+                                        : filesView(index, widget.listFilter);
                                     switchButton
                                         ? addSonDirectory(
                                             index,
-                                            ReadSonFiles.listDirectory(widget
+                                            readSonFiles.listDirectory(widget
                                                 .listDirectory[index].path))
                                         : addSonDirectory(
                                             index,
-                                            ReadSonFiles.listDirectory(
+                                            readSonFiles.listDirectory(
                                                 widget.listFilter[index].path));
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -556,4 +557,76 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+}
+
+Widget createListView(
+    getSwitch, getListDirectory, getListFilter, addSonDirectory, filesView) {
+  ExistsDirectoryService ReadSonFiles = ExistsDirectoryService();
+  return ListView.builder(
+    shrinkWrap: true,
+    padding: const EdgeInsets.all(8),
+    itemCount: getSwitch() ? getListDirectory.length : getListFilter.length,
+    itemBuilder: (context, index) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 7),
+            child: Container(
+              decoration: const BoxDecoration(
+                border: Border(right: BorderSide(color: Color(0xFFB8A12B))),
+                gradient: LinearGradient(
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  colors: [Color(0xff452ce1), Color(0x59ffffff)],
+                ),
+              ),
+              child: SizedBox(
+                height: 22,
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: () {
+                    getSwitch
+                        ? filesView(index, getListDirectory)
+                        : filesView(index, getListFilter);
+                    getSwitch
+                        ? addSonDirectory(
+                            index,
+                            ReadSonFiles.listDirectory(
+                                getListDirectory[index].path))
+                        : addSonDirectory(
+                            index,
+                            ReadSonFiles.listDirectory(
+                                getListFilter[index].path));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.all(0),
+                  ),
+                  child: Text(
+                    getSwitch
+                        ? getListDirectory[index]
+                            .path
+                            .replaceAll('\\', '/')
+                            .split('/')
+                            .last
+                        : getListFilter[index]
+                            .path
+                            .replaceAll('\\', '/')
+                            .split('/')
+                            .last,
+                    style: GoogleFonts.poppins(
+                      color: const Color(
+                        0xFFD1C6FF,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

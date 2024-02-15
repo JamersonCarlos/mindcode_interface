@@ -5,7 +5,7 @@ class ExistsDirectoryService {
     return io.Directory(path).exists();
   }
 
-  List<io.FileSystemEntity> listDirectory(String path) {
+  List<io.FileSystemEntity> listAll(String path) {
     List<io.FileSystemEntity> list = io.Directory(path).listSync();
     List<io.FileSystemEntity> listDirectory = [];
     List<io.FileSystemEntity> listFile = [];
@@ -39,5 +39,17 @@ class ExistsDirectoryService {
       },
     );
     return List.from(listDirectory)..addAll(listFile);
+  }
+
+  List<io.FileSystemEntity> listDirectory(String path) {
+    List<io.FileSystemEntity> list = io.Directory(path).listSync();
+    List<io.FileSystemEntity> directorys = [];
+    for (int i = 0; i < list.length; i++) {
+      if (list[i].runtimeType.toString()[1] == "D") {
+        directorys.add(list[i]);
+      }
+    }
+
+    return directorys; 
   }
 }

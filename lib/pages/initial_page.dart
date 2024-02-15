@@ -107,7 +107,7 @@ class _initialPageState extends State<InitialPage> {
 
   void checkExistDirectory() async {
     bool response = await service.checkDirectory(submitPath.text);
-    List<io.FileSystemEntity> list = service.listDirectory(submitPath.text);
+    List<io.FileSystemEntity> list = service.listAll(submitPath.text);
     if (response) {
       existsDirectory = true;
       // ignore: use_build_context_synchronously
