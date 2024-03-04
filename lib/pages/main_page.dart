@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
 
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mindcode_interface/pages/initial_page.dart';
+import 'package:mindcode_interface/services/llama_api.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({
@@ -19,6 +19,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final service = ServiceLlamaApi();
+  String dados_do_modelo = "";
   TextEditingController boxDialog = TextEditingController();
   bool switchButton = false;
   bool isHoverContainer = false;
@@ -40,6 +42,9 @@ class _MainPageState extends State<MainPage> {
       return const Icon(Icons.close);
     },
   );
+  receberdados(String dados) async{  
+  return await service.methodName(question: dados);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,25 +74,24 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.only(
-                      top: 25, bottom: 25, left: 0, right: 0),
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 2,
-                        color: Color(0xFFC3B4FF),
+                    padding: const EdgeInsets.only(
+                        top: 25, bottom: 25, left: 0, right: 0),
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 2,
+                          color: Color(0xFFC3B4FF),
+                        ),
                       ),
                     ),
-                  ),
-                  child: Text('MindCode',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: const Color(0xFFD1C6FF),
-                        fontSize: 23,
-                        fontWeight: FontWeight.w600,
-                      )),
-                ),
+                    child: const Text('MindCode',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Color(0xFFD1C6FF),
+                          fontSize: 23,
+                          fontWeight: FontWeight.w600,
+                        ))),
                 Container(
                   padding: const EdgeInsets.all(25),
                   width: MediaQuery.of(context).size.width * 0.2,
@@ -117,11 +121,11 @@ class _MainPageState extends State<MainPage> {
                         ),
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(right: 10),
                           child: Icon(
                             Icons.search,
@@ -129,11 +133,10 @@ class _MainPageState extends State<MainPage> {
                         ),
                         Text(
                           'Search File',
-                          style: GoogleFonts.poppins(
-                            color: const Color(0xFFD1C6FF),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
-                          ),
+                          style: TextStyle(
+                              color: Color(0xFFD1C6FF),
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -144,10 +147,11 @@ class _MainPageState extends State<MainPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Arquivos Ocultos   ',
-                        style: GoogleFonts.poppins(
-                          color: const Color(0xFFD1C6FF),
+                        style: TextStyle(
+                          color: Color(0xFFD1C6FF),
+                          fontSize: 15,
                         ),
                       ),
                       Transform.scale(
@@ -205,21 +209,17 @@ class _MainPageState extends State<MainPage> {
                                   padding: const EdgeInsets.all(0),
                                 ),
                                 child: Text(
-                                  switchButton
-                                      ? widget.listDirectory[index].path
-                                          .replaceAll('\\', '/')
-                                          .split('/')
-                                          .last
-                                      : widget.listFilter[index].path
-                                          .replaceAll('\\', '/')
-                                          .split('/')
-                                          .last,
-                                  style: GoogleFonts.poppins(
-                                    color: const Color(
-                                      0xFFD1C6FF,
-                                    ),
-                                  ),
-                                ),
+                                    switchButton
+                                        ? widget.listDirectory[index].path
+                                            .replaceAll('\\', '/')
+                                            .split('/')
+                                            .last
+                                        : widget.listFilter[index].path
+                                            .replaceAll('\\', '/')
+                                            .split('/')
+                                            .last,
+                                    style: const TextStyle(
+                                        color: Color(0xFFD1C6FF))),
                               ),
                             ),
                           ),
@@ -260,18 +260,20 @@ class _MainPageState extends State<MainPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            const Text(
                               'DashBoard ',
-                              style: GoogleFonts.poppins(
-                                color: const Color(0xFFCCC3FF),
-                                fontSize: 32,
+                              style: TextStyle(
+                                color: Color(0xFFD1C6FF),
+                                fontSize: 20,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             DropdownMenu<String>(
                               initialSelection: options.first,
-                              textStyle: GoogleFonts.poppins(
-                                color: const Color(0xFFCCC3FF),
+                              textStyle: const TextStyle(
+                                color: Color(0xFFD1C6FF),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
                               ),
                               onSelected: (String? value) {
                                 // This is called when the user selects an item.
@@ -321,7 +323,28 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          Expanded(child: Container()),
+                          Expanded(
+                          child: Container(
+                            child: Center(
+                                child:FutureBuilder(
+                                future: receberdados(
+                                  boxDialog.text == '' ?
+                                  'escreva as boas vindas ao projeto mindcode' 
+                                  : boxDialog.text),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Erro ao carregar os dados',
+                                    style: TextStyle(color: Colors.red));
+                                  } else {
+                                    return Text(snapshot.data.toString() ?? 'Sem dados',
+                                    style: TextStyle(color: Colors.white));
+                                  }
+                                },
+                             ),
+                                ),
+                          )),
                           Container(
                             height: 50,
                             decoration: const BoxDecoration(
@@ -335,17 +358,24 @@ class _MainPageState extends State<MainPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8, right: 8),
                               child: TextField(
+                                style: const TextStyle(
+                                  color: Color(0xFFD1C6FF),
+                                ),
+                                onSubmitted: (String value) {
+                                  receberdados(value);
+                                  setState(() {});
+                                  boxDialog.clear();
+                                },
                                 controller: boxDialog,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: '   Message MindCode',
-                                  hintStyle: GoogleFonts.poppins(
-                                    color: const Color(0xFFCCC3FF),
-                                  ),
-                                  suffixIcon: const Icon(
+                                  hintStyle:
+                                      TextStyle(color: Color(0xFFD1C6FF)),
+                                  suffixIcon: Icon(
                                     Icons.next_week,
                                     size: 30,
                                   ),
-                                  focusedBorder: const UnderlineInputBorder(
+                                  focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.transparent,
                                     ),
