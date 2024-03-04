@@ -20,7 +20,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final service = ServiceLlamaApi();
-  String dados_do_modelo = "";
+  Future<String> dados_do_modelo = Future.value('');
   TextEditingController boxDialog = TextEditingController();
   bool switchButton = false;
   bool isHoverContainer = false;
@@ -44,6 +44,12 @@ class _MainPageState extends State<MainPage> {
   );
   receberdados(String dados) async{  
   return await service.methodName(question: dados);
+  }
+  @override
+  void initState() {
+    super.initState();
+    // Inicialização de variáveis ou configuração de estado aqui
+    dados_do_modelo = service.methodName(question: 'escreva as boas vindas ao projeto mindcode');
   }
 
   @override
@@ -180,14 +186,14 @@ class _MainPageState extends State<MainPage> {
                         padding: const EdgeInsets.only(top: 7),
                         child: MouseRegion(
                           onEnter: (event) {
-                            setState(() {
-                              isHoverContainer = true;
-                            });
+                            // setState(() {
+                            //   isHoverContainer = true;
+                            // });
                           },
                           onExit: (event) {
-                            setState(() {
-                              isHoverContainer = false;
-                            });
+                            // setState(() {
+                            //   isHoverContainer = false;
+                            // });
                           },
                           child: Container(
                             decoration: const BoxDecoration(
@@ -327,10 +333,7 @@ class _MainPageState extends State<MainPage> {
                           child: Container(
                             child: Center(
                                 child:FutureBuilder(
-                                future: receberdados(
-                                  boxDialog.text == '' ?
-                                  'escreva as boas vindas ao projeto mindcode' 
-                                  : boxDialog.text),
+                                future: dados_do_modelo,
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return CircularProgressIndicator();

@@ -9,11 +9,12 @@ class ServiceLlamaApi {
   Future<String> methodName({required String question}) async {
     var response;
     try {
-      await Dio().post(
+      response = await Dio().post(
         url.toString(),
         data: {"model": "codellama:7b", "prompt": question, "stream": false},
       );
-      _streamController.add(response.data["response"]);
+      // print(response.data["response"]);
+      // _streamController.add(response.data["response"]);
       return response.data["response"];
     } catch (e) {
       print(e);
