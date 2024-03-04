@@ -335,15 +335,14 @@ class _MainPageState extends State<MainPage> {
                                 child:FutureBuilder(
                                 future: dados_do_modelo,
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
+                                   if (snapshot.hasError) {
                                     return Text('Erro ao carregar os dados',
                                     style: TextStyle(color: Colors.red));
-                                  } else {
+                                  } else if (snapshot.hasData && snapshot.data != ''){
                                     return Text(snapshot.data.toString() ?? 'Sem dados',
                                     style: TextStyle(color: Colors.white));
                                   }
+                                  return CircularProgressIndicator();
                                 },
                              ),
                                 ),
@@ -365,9 +364,11 @@ class _MainPageState extends State<MainPage> {
                                   color: Color(0xFFD1C6FF),
                                 ),
                                 onSubmitted: (String value) {
-                                  receberdados(value);
-                                  setState(() {});
+                                  dados_do_modelo = Future.value('');
                                   boxDialog.clear();
+                                  setState(() {});
+                                  dados_do_modelo = service.methodName(question: value);
+                                  setState(() {});
                                 },
                                 controller: boxDialog,
                                 decoration: const InputDecoration(
