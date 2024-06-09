@@ -11,7 +11,10 @@ Projeto desenvolvido como parte da disciplina de PI4 na Universidade Federal Rur
 
 ## Stack utilizada
 
-**Front-end:** <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
+<div style="display: flex; align-items: center; justify-content: center;">
+  <p> <strong>Front-end:</strong> </p>
+  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
+</div>
 
 **Back-end:** 
 
