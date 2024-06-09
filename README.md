@@ -11,12 +11,12 @@ Projeto desenvolvido como parte da disciplina de PI4 na Universidade Federal Rur
 
 ## Stack utilizada
 
-<div style="display: flex; align-items: center; justify-content: center;">
-  <p> <strong>Front-end:</strong> </p>
-  <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white">
-</div>
+**Front-end:**
+- ![Flutter Badge](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
 
-**Back-end:** 
+**Back-end:**
+- ![Python](https://img.shields.io/badge/python-02569B?style=for-the-badge&logo=python&logoColor=white)
+- ![Firebase](https://img.shields.io/badge/firebase-02569B?style=for-the-badge&logo=firebase&logoColor=white)
 
 
 # Roadmap
@@ -24,3 +24,4 @@ Projeto desenvolvido como parte da disciplina de PI4 na Universidade Federal Rur
 - Melhorar o suporte de navegadores
 
 - Adicionar mais integrações
+
